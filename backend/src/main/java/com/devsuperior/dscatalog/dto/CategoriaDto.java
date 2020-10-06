@@ -23,4 +23,18 @@ public class CategoriaDto implements Serializable {
 		this.setId(categoria.getId());
 		this.setDescricao(categoria.getDescricao());
 	}
+	
+	public Categoria getDtoToEntity(Long... id) {
+		
+		if(id!=null) {
+			
+			for (Long idCategoria : id) {
+				this.id = idCategoria;
+				break;
+			}
+		}
+		
+		Categoria categoria = new Categoria(this.id, this.descricao);
+		return categoria;
+	}
 }

@@ -1,13 +1,17 @@
 package com.devsuperior.dscatalog.resources;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.devsuperior.dscatalog.dto.CategoriaDto;
 import com.devsuperior.dscatalog.services.CategoriaService;
@@ -22,14 +26,22 @@ public class CategoriaResource {
 	@GetMapping
 	public ResponseEntity<List<CategoriaDto>> consultarTodos() {
 
-		List<CategoriaDto> lista = service.consultarTodos();
+		List<CategoriaDto> lista = this.service.consultarTodos();
 		return ResponseEntity.ok().body(lista);
 	}
 
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<CategoriaDto> consultarPorId(@PathVariable Long id) {
 
-		CategoriaDto dto = service.consultarPorId(id);
+		CategoriaDto dto = this.service.consultarPorId(id);
 		return ResponseEntity.ok().body(dto);
+	}
+
+	@PostMapping
+	public ResponseEntity<CategoriaDto> salvar(@RequestBody CategoriaDto dto) {
+
+		dto = this.service.salvar(dto);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
+		return ResponseEntity.created(uri).body(dto);
 	}
 }
