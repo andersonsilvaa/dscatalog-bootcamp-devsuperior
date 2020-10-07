@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.devsuperior.dscatalog.services.exceptions.EntityNotFoundException;
+import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
 
 @ControllerAdvice
 public class ResourceExceptionHandler {
@@ -18,8 +18,8 @@ public class ResourceExceptionHandler {
 	 * MÉTODO RESPONSÁVEL POR TRATAR O ERRO DE ENTIDADE NÃO LOCALIZADA E DISPARAR UM
 	 * ERRO PERSONALIZADO PARA O USUÁRIO
 	 */
-	@ExceptionHandler(EntityNotFoundException.class)
-	public ResponseEntity<Error> entityNotFound(EntityNotFoundException exception, HttpServletRequest request) {
+	@ExceptionHandler(ResourceNotFoundException.class)
+	public ResponseEntity<Error> entityNotFound(ResourceNotFoundException exception, HttpServletRequest request) {
 
 		Error error = new Error();
 		error.setTimestamp(Instant.now());
