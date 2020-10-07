@@ -1,3 +1,3 @@
-INSERT INTO tb_categoria (DESCRICAO) VALUES ('Livros');
-INSERT INTO tb_categoria (DESCRICAO) VALUES ('Eletrônicos');
-INSERT INTO tb_categoria (DESCRICAO) VALUES ('Computadores');
+INSERT INTO tb_categoria (DESCRICAO, HORARIO_CRIADO) VALUES ('Livros', NOW());
+INSERT INTO tb_categoria (DESCRICAO, HORARIO_CRIADO) VALUES ('Eletrônicos', NOW());
+INSERT INTO tb_categoria (DESCRICAO, HORARIO_CRIADO) VALUES ('Computadores', NOW());
