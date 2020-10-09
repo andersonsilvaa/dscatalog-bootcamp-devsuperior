@@ -1,9 +1,11 @@
 package com.devsuperior.dscatalog.resources;
 
 import java.net.URI;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -26,9 +29,15 @@ public class CategoriaResource {
 	private CategoriaService service;
 
 	@GetMapping
-	public ResponseEntity<List<CategoriaDto>> consultarTodos() {
+	public ResponseEntity<Page<CategoriaDto>> consultarPorPaginacao(
+			@RequestParam(value = "pagina", defaultValue = "0") Integer pagina,
+			@RequestParam(value = "quantidadeRegistros", defaultValue = "12") Integer quantidadeRegistros,
+			@RequestParam(value = "direcao", defaultValue = "DESC") String direcao,
+			@RequestParam(value = "ordenacao", defaultValue = "descricao") String ordenacao) {
+		
+		PageRequest pageRequest = PageRequest.of(pagina, quantidadeRegistros, Direction.valueOf(direcao), ordenacao);
 
-		List<CategoriaDto> lista = this.service.consultarTodos();
+		Page<CategoriaDto> lista = this.service.consultarPorPaginacao(pageRequest);
 		return ResponseEntity.ok().body(lista);
 	}
 
