@@ -28,8 +28,8 @@ public class CategoriaDto implements Serializable {
 		
 		if(id!=null) {
 			
-			for (Long idCategoria : id) {
-				this.id = idCategoria;
+			for (Long categoriaId : id) {
+				this.id = categoriaId;
 				break;
 			}
 		}
