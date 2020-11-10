@@ -3,6 +3,7 @@ package com.devsuperior.dscatalog.entities;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,6 +16,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import org.modelmapper.ModelMapper;
+
+import com.devsuperior.dscatalog.dto.ProdutoDto;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -61,11 +66,35 @@ public class Produto implements Serializable {
 	@Column(name = "DATA", columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
 	private Instant data;
 
-	@Getter
 	@ManyToMany
 	@JoinTable(name = "tb_produto_categoria", 
 		joinColumns = @JoinColumn(name = "produto_id"), 
 		inverseJoinColumns = @JoinColumn(name = "categoria_id"))
 	private Set<Categoria> categorias = new HashSet<Categoria>();
+	
+	/*************************************
+	 * CONSTRUTORES
+	 ************************************/
+	
+	public Produto(ProdutoDto dto) {
+		
+		new ModelMapper().map(dto, this);
+	}
+	
+	/*****************************************************
+	 *	METODOS ACESSORES
+	 ****************************************************/
+	
+	public Set<Categoria> getCategorias() {
+		return Collections.unmodifiableSet(categorias);
+	}
+	
+	public void addCategoria(Categoria categoria) {
+		
+		if (categoria != null) {
+
+			this.categorias.add(categoria);
+		}
+	}
 
 }

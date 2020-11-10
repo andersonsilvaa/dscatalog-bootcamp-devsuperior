@@ -12,6 +12,10 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
+import org.modelmapper.ModelMapper;
+
+import com.devsuperior.dscatalog.dto.CategoriaDto;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -48,10 +52,9 @@ public class Categoria implements Serializable {
 	public Categoria() {
 	}
 
-	public Categoria(Long id, String descricao) {
+	public Categoria(CategoriaDto dto) {
 
-		this.id = id;
-		this.descricao = descricao;
+		new ModelMapper().map(dto, this);
 	}
 
 	/*************************************

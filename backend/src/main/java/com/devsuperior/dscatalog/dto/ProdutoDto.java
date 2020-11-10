@@ -3,12 +3,12 @@ package com.devsuperior.dscatalog.dto;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 import com.devsuperior.dscatalog.entities.Categoria;
 import com.devsuperior.dscatalog.entities.Produto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,7 +25,7 @@ public class ProdutoDto implements Serializable {
 	private BigDecimal valor;
 	private String urlImagem;
 	private Instant data;
-	private List<CategoriaDto> categorias = new ArrayList<CategoriaDto>();
+	private Set<CategoriaDto> categorias = new HashSet<CategoriaDto>();
 
 	/***************************************
 	 ** CONSTRUTORES
@@ -55,6 +55,12 @@ public class ProdutoDto implements Serializable {
 
 		this(produto);
 		categorias.forEach(categoria -> this.categorias.add(new CategoriaDto(categoria)));
+	}
+
+	@JsonIgnore
+	public Produto getDtoToEntity() {
+
+		return new Produto(this);
 	}
 
 }

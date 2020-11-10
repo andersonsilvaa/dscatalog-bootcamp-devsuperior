@@ -3,6 +3,7 @@ package com.devsuperior.dscatalog.dto;
 import java.io.Serializable;
 
 import com.devsuperior.dscatalog.entities.Categoria;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,23 +19,19 @@ public class CategoriaDto implements Serializable {
 	private Long id;
 	private String descricao;
 
+	/***************************************
+	 ** CONSTRUTORES
+	 **************************************/
+
 	public CategoriaDto(Categoria categoria) {
 
 		this.setId(categoria.getId());
 		this.setDescricao(categoria.getDescricao());
 	}
-	
-	public Categoria getDtoToEntity(Long... id) {
-		
-		if(id!=null) {
-			
-			for (Long categoriaId : id) {
-				this.id = categoriaId;
-				break;
-			}
-		}
-		
-		Categoria categoria = new Categoria(this.id, this.descricao);
-		return categoria;
+
+	@JsonIgnore
+	public Categoria getDtoToEntity() {
+
+		return new Categoria(this);
 	}
 }
