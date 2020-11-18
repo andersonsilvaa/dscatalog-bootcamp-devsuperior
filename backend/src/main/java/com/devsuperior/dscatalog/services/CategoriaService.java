@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -42,7 +43,8 @@ public class CategoriaService {
 	@Transactional
 	public CategoriaDto salvar(CategoriaDto dto) {
 
-		Categoria categoria = dto.getDtoToEntity();
+		Categoria categoria = new Categoria();
+		new ModelMapper().map(dto, categoria);
 		categoria = this.repository.save(categoria);
 		return new CategoriaDto(categoria);
 	}
@@ -53,7 +55,7 @@ public class CategoriaService {
 		try {
 
 			Categoria categoria = this.repository.getOne(id);
-			categoria.setDescricao(dto.getDescricao());
+			new ModelMapper().map(dto, categoria);
 			categoria = this.repository.save(categoria);
 			return new CategoriaDto(categoria);
 		} 

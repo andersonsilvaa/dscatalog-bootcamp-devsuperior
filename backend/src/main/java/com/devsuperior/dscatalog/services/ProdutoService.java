@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -12,8 +13,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.devsuperior.dscatalog.dto.CategoriaDto;
 import com.devsuperior.dscatalog.dto.ProdutoDto;
+import com.devsuperior.dscatalog.entities.Categoria;
 import com.devsuperior.dscatalog.entities.Produto;
+import com.devsuperior.dscatalog.repositories.CategoriaRepository;
 import com.devsuperior.dscatalog.repositories.ProdutoRepository;
 import com.devsuperior.dscatalog.services.exceptions.DataBaseException;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
@@ -23,6 +27,9 @@ public class ProdutoService {
 
 	@Autowired
 	private ProdutoRepository repository;
+
+	@Autowired
+	private CategoriaRepository categoriaRepository;
 
 	@Transactional(readOnly = true)
 	public Page<ProdutoDto> consultarPorPaginacao(PageRequest pageRequest) {
@@ -42,7 +49,8 @@ public class ProdutoService {
 	@Transactional
 	public ProdutoDto salvar(ProdutoDto dto) {
 
-		Produto produto = dto.getDtoToEntity();
+		Produto produto = new Produto();
+		copyDtoToEntity(dto, produto);
 		produto = this.repository.save(produto);
 		return new ProdutoDto(produto);
 	}
@@ -53,7 +61,7 @@ public class ProdutoService {
 		try {
 
 			Produto produto = this.repository.getOne(id);
-			produto.setDescricao(dto.getDescricao());
+			copyDtoToEntity(dto, produto);
 			produto = this.repository.save(produto);
 			return new ProdutoDto(produto);
 		} catch (EntityNotFoundException e) {
@@ -72,6 +80,19 @@ public class ProdutoService {
 		} catch (DataIntegrityViolationException e) {
 
 			throw new DataBaseException("Violação de integridade");
+		}
+	}
+
+	private void copyDtoToEntity(ProdutoDto dto, Produto produto) {
+
+		new ModelMapper().map(dto, produto);
+
+		produto.getCategorias().clear();
+
+		for (CategoriaDto catDto : dto.getCategorias()) {
+
+			Categoria categoria = this.categoriaRepository.getOne(catDto.getId());
+			produto.getCategorias().add(categoria);
 		}
 	}
 }

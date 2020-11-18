@@ -6,9 +6,10 @@ import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.modelmapper.ModelMapper;
+
 import com.devsuperior.dscatalog.entities.Categoria;
 import com.devsuperior.dscatalog.entities.Produto;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -43,12 +44,7 @@ public class ProdutoDto implements Serializable {
 
 	public ProdutoDto(Produto produto) {
 
-		this.id = produto.getId();
-		this.nome = produto.getNome();
-		this.descricao = produto.getDescricao();
-		this.valor = produto.getValor();
-		this.urlImagem = produto.getUrlImagem();
-		this.data = produto.getData();
+		new ModelMapper().map(produto, this);
 	}
 
 	public ProdutoDto(Produto produto, Set<Categoria> categorias) {
@@ -56,11 +52,4 @@ public class ProdutoDto implements Serializable {
 		this(produto);
 		categorias.forEach(categoria -> this.categorias.add(new CategoriaDto(categoria)));
 	}
-
-	@JsonIgnore
-	public Produto getDtoToEntity() {
-
-		return new Produto(this);
-	}
-
 }
